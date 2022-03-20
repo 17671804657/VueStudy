@@ -36,9 +36,9 @@
                 //set什么时候被调用？当fullName被修改时
                 set(){
                     // console.log('set',value);
-                    const arr = value.split('-')
-                    this.firstName = arr[0];
-                    this.lastName = arr[1];
+                    const [ firstName, lastName ] = value.split('-');
+                    this.firstName = firstName;
+                    this.lastName = lastName; //依赖属性发生改变之后,计算属性自动改变
                 }
             }
         }
