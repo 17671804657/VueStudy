@@ -21,10 +21,14 @@
     <h2>学生真实年龄:{{ stu.age.rage }}</h2>
     <h2>学生对外年龄:{{ stu.age.sage}}</h2>
     <h2 v-if="stu.sex">学生性别: {{ stu.sex }}</h2>
-    <h2>朋友们</h2>
-     <ul v-for="(f, index) in stu.friends" :key="index">
-         <li>{{ f.name }} -- {{ f.age }}</li>
+    <h2>爱好</h2>
+     <ul v-for="(h, index) in stu.hobby" :key="index">
+         <li>{{h}}</li>
      </ul>
+     <h2>朋友们</h2>
+     <ul v-for="(f, index) in stu.friends" :key="index">
+        <li>{{ f.na me }} -- {{ f.age }}</li>
+    </ul>
 </div>
 <script type="text/javascript">
     const vm = new Vue({
@@ -35,9 +39,10 @@
              stu:{
                  name: 'tom',
                  age:{
-                     rage: 12,
+                     rage: 40,
                      sage: 29
                  },
+                 hobby:['抽烟','喝酒','烫头'],
                  friends: [
                      { name: 'Jerry', age: 23 },
                      { name: 'Jane', age: 18 }
