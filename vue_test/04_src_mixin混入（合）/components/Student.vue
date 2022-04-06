@@ -1,12 +1,13 @@
 <template>
   <div>
-    <h2>学生的名称:{{ name }}</h2>
+    <h2 @click="showName">学生的名称:{{ name }}</h2>
     <h2>学生的性别:{{ sex }}</h2>
    
   </div>
 </template>
 
 <script>
+import {hunhe,hunhe2} from '../mixin'
 export default {
   name: "Student",
   data() {
@@ -15,6 +16,7 @@ export default {
       sex: '男'
     };
   },
+  mixins:[hunhe,hunhe2]
 };
 </script>
 
