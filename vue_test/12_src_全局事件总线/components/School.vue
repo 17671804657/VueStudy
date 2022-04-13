@@ -1,8 +1,7 @@
 <template>
-   <div class="demo">
+   <div class="school">
      <h2>学校名称:{{  name }}</h2>
      <h2>学校地址: {{ address }}</h2>
-     <button @click="sendSchoolName">把学校名传递给app</button>
    </div>
 </template>
 
@@ -16,20 +15,22 @@ export default {
        address: '武汉科技大学'
     }
   },
-  methods:{
-    sendSchoolName(){
-      this.getSchoolName(this.name);
-    }
+  mounted() {
+    this.$bus.$on('hello',(data)=>{
+      console.log('我是School组件，收到了数据',data);
+    })
   },
-  props: ['getSchoolName'],
+  beforeDestroy() {
+    this.$bus.$off('hello')
+  },
 }
 </script>
 
 <style scoped>
    /*scoped代表局部的*/
-  .demo{
+  .school{
     background: skyblue;
-    padding:5px
+    padding: 10px;
   }
 </style>
 

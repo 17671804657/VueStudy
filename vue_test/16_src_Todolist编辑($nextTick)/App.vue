@@ -5,8 +5,6 @@
         <MyHeader @addTodo="addTodo"/>
         <List
             :todos="todos"
-            :checkTodo="checkTodo"
-            :deleteTodo="deleteTodo"
         />
         <MyFooter
             :todos="todos"
@@ -19,6 +17,7 @@
 </template>
 
 <script>
+import pubsub from 'pubsub-js'
 import MyHeader from "@/components/MyHeader";
 import List from "@/components/List";
 import MyFooter from '@/components/MyFooter';
@@ -31,11 +30,7 @@ export default {
   },
   data() {
     return {
-      todos: [
-        {id: '001', title: '吃饭', done: false},
-        {id: '002', title: "睡觉", done: true},
-        {id: '003', title: '打代码', done: false}
-      ]
+      todos:JSON.parse(localStorage.getItem('todos')) || []
     }
   },
   methods:{
@@ -48,7 +43,12 @@ export default {
       const todo = this.todos.find(todo => todo.id === id);
       todo.done = !todo.done;
     },
-    deleteTodo(id){
+    updataTodo(id,title){
+      this.todos.forEach((todo)=>{
+        if(todo.id === id) todo.title=title
+      })
+    },
+    deleteTodo(_,id){
       this.todos = this.todos.filter(todo => todo.id !== id);
     },
     checkAllTodo(done){
@@ -57,6 +57,29 @@ export default {
     clearAllDoneTodo(){
       this.todos = this.todos.filter(todo => !todo.done)
     }
+  },
+  watch:{
+    //深度监视
+    todos:{
+      deep: true, //深度监视当我监视数组中的对象的某个属性的变化它也会产生反应
+      handler(newValue) {
+        //本地存储存的是key和value都是字符串
+        //数据存放在本地存储中
+        localStorage.setItem("todos", JSON.stringify(newValue))
+      }
+    },
+  },
+  //已挂在绑定事件总线
+  mounted() {
+    this.$bus.$on('checkTodo', this.checkTodo);
+    this.$bus.$on('updataTodo', this.updataTodo);
+    this.pubId = pubsub.subscribe('deleteTodo', this.deleteTodo);
+  },
+  //被卸载注意解绑
+  beforeMount() {
+    this.$bus.$off('checkTodo');
+    this.$bus.$off('updataTodo');
+    pubsub.unsubscribe(this.pubId);
   }
 }
 </script>
@@ -85,7 +108,12 @@ body {
   background-color: #da4f49;
   border: 1px solid #bd362f;
 }
-
+.btn-edit {
+  color: #fff;
+  background-color: skyblue;
+  border: 1px solid #bfa;
+  margin-right: 5px;
+}
 .btn-danger:hover {
   color: #fff;
   background-color: #bd362f;
